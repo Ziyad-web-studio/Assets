@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Typing Test - Infinity Mode</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;500;700&display=swap');
+
+    * { 
+      box-sizing: border-box; 
+      -webkit-tap-highlight-color: transparent; 
+    }
+
+    button {
+      outline: none; 
+    }
+
+    body {
+      background-color: #323437;
+      color: #646669;
+      font-family: 'Roboto Mono', monospace;
+      margin: 0;
+      overflow: hidden;
+      selection-color: transparent;
+    }
+
+    #app {
+      width: 100%;
+      max-width: 1000px;
+      margin: 0 auto;
+      height: 100vh;
+      padding: 20px;
+      padding-bottom: 40vh; 
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      position: relative;
+    }
+
+    #config-area {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 15px;
+      margin-bottom: 20px;
+      width: 100%;
+    }
+
+    .settings-badge {
+      background-color: #2c2e31;
+      color: #646669;
+      padding: 10px 20px;
+      border-radius: 8px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: color 0.2s;
+    }
+    
+    .settings-badge:hover { color: #d1d0c5; }
+
+    #settings-overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background-color: rgba(0, 0, 0, 0.4);
+      backdrop-filter: blur(2px);
+      z-index: 90;
+    }
+
+    #settings-menu {
+      display: none;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
+      background-color: #2c2e31;
+      padding: 25px 35px;
+      border-radius: 15px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+      z-index: 100;
+      width: 90%;
+      max-width: 450px;
+    }
+
+    .settings-title {
+      color: #d1d0c5;
+      font-size: 1.2rem;
+      font-weight: bold;
+    }
+
+    #settings-options {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .word-count-btn {
+      background: #323437;
+      border: 2px solid transparent;
+      color: #646669;
+      font-family: inherit;
+      font-size: 1.1rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+      padding: 8px 16px;
+      border-radius: 8px;
+    }
+
+    .word-count-btn:hover {
+      color: #d1d0c5;
+      background: #3a3d40;
+    }
+
+    .word-count-btn.active {
+      color: #323437;
+      background: #e2b714;
+      font-weight: bold;
+    }
+
+    #progress {
+      font-size: 2.5rem;
+      color: #e2b714;
+      margin-bottom: 10px;
+      font-weight: 500;
+      width: 100%;
+      text-align: left;
+      font-variant-numeric: slashed-zero;
+    }
+
+    #typing-area {
+      position: relative;
+      height: 160px;
+      line-height: 55px;
+      font-size: 36px;
+      overflow: hidden;
+      width: 100%;
+      text-align: left;
+      -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 15%, black 85%, transparent 100%);
+      mask-image: linear-gradient(to bottom, transparent 0%, black 15%, black 85%, transparent 100%);
+    }
+
+    #focus-overlay {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: #d1d0c5;
+      font-size: 1.2rem;
+      text-align: center;
+      line-height: 1.6;
+      z-index: 20;
+      transition: opacity 0.2s;
+      cursor: pointer;
+      background: transparent;
+      padding: 0 20px;
+    }
+
+    #typing-area.is-focused #focus-overlay {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    #typing-area:not(.is-focused) #moving-canvas {
+      filter: blur(5px);
+    }
+
+    #moving-canvas {
+      position: relative;
+      transition: transform 0.25s ease-out, filter 0.2s;
+    }
+
+    .word {
+      display: inline-block;
+      margin-right: 15px;
+    }
+    
+    .char {
+      transition: color 0.1s;
+      position: relative;
+    }
+
+    .correct { color: #d1d0c5; }
+    .incorrect { 
+      color: #ca4754; 
+      background-color: rgba(202, 71, 84, 0.15); 
+      border-radius: 2px;
+    }
+
+    #caret {
+      position: absolute;
+      width: 3px;
+      height: 40px;
+      background-color: #e2b714;
+      transition: left 0.1s ease, top 0.1s ease;
+      margin-top: 8px;
+      border-radius: 2px;
+      z-index: 10;
+    }
+    
+    @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+    .blink { animation: blink 1s infinite; }
+    .typing { animation: none; opacity: 1; }
+
+    #hidden-input {
+      position: absolute;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .action-container {
+      display: flex;
+      justify-content: center;
+      gap: 40px;
+      margin-top: 30px;
+    }
+
+    .action-btn {
+      color: #646669;
+      background: transparent;
+      border: none;
+      padding: 10px;
+      cursor: pointer;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      transition: color 0.2s, transform 0.2s;
+    }
+
+    .action-btn:hover { color: #d1d0c5; }
+    .action-btn.reset:hover { transform: rotate(-30deg); }
+    .action-btn.next:hover { transform: translateX(5px); }
+
+    #result {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+
+    .score-title { font-size: 1.5rem; color: #646669; margin-top: 20px; }
+    .score-value { font-size: 6rem; color: #e2b714; line-height: 1; font-weight: 500; }
+  </style>
+</head>
+<body>
+
+  <div id="settings-overlay"></div>
+  <div id="settings-menu">
+    <div class="settings-title">Pilih Jumlah Kata (Words)</div>
+    <div id="settings-options"></div>
+  </div>
+
+  <div id="app">
+    <div id="config-area" class="screen-only">
+      <div class="settings-badge" id="settings-toggle">⚙ settings</div>
+    </div>
+
+    <div id="progress" class="screen-only">0/0</div>
+
+    <input type="text" id="hidden-input" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
+    
+    <div id="typing-area" class="screen-only">
+      <div id="focus-overlay">
+        <span>Klik di sini atau tekan tombol<br>apa saja untuk fokus</span>
+      </div>
+      <div id="moving-canvas">
+        <div id="text-wrapper"></div>
+        <div id="caret" class="blink"></div>
+      </div>
+    </div>
+    
+    <div class="action-container screen-only">
+      <button id="restart-hint" class="action-btn reset" title="Ulangi Teks Ini">
+        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/>
+        </svg>
+      </button>
+      <button id="next-hint" class="action-btn next" title="Teks Baru">
+        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M5 12h14M12 5l7 7-7 7"/>
+        </svg>
+      </button>
+    </div>
+
+    <div id="result">
+      <div class="score-title">wpm</div>
+      <div class="score-value" id="wpm">0</div>
+      <div class="score-title">acc</div>
+      <div class="score-value" style="font-size: 4rem;" id="accuracy">0%</div>
+      
+      <div class="action-container" style="margin-top: 40px;">
+        <button id="restart-btn-result" class="action-btn reset" title="Ulangi Teks Ini">
+          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/>
+          </svg>
+        </button>
+        <button id="next-btn-result" class="action-btn next" title="Teks Baru">
+          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M5 12h14M12 5l7 7-7 7"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const WORD_LIST = ["tahu", "enggak", "kenapa", "senja", "selalu", "indah", "karena", "ia", "berakhir", "seperti", "kode", "yang", "bersih", "tanpa", "bug", "desain", "yang", "elegan", "tidak", "butuh", "penjelasan", "fokus", "pada", "struktur", "dan", "kesederhanaan", "konsistensi", "adalah", "kunci", "sebuah", "perjalanan", "bukan", "tujuan"];
+    const WORD_OPTIONS = [10, 25, 50, 100, '∞'];
+    
+    let currentWordCount = 25;
+    let isInfinityMode = false;
+    let lives = 3;
+    let previousInputLength = 0;
+
+    let sampleText = "";
+    let charsData = [];
+    let startTime = null;
+    let caretTimeout;
+    let totalWordsCount = 0;
+
+    const textWrapper = document.getElementById('text-wrapper');
+    const hiddenInput = document.getElementById('hidden-input');
+    const caret = document.getElementById('caret');
+    const movingCanvas = document.getElementById('moving-canvas');
+    const progressText = document.getElementById('progress');
+    const typingArea = document.getElementById('typing-area');
+    const resultArea = document.getElementById('result');
+    const settingsMenu = document.getElementById('settings-menu');
+    const settingsOptions = document.getElementById('settings-options');
+    const settingsOverlay = document.getElementById('settings-overlay');
+    const settingsToggle = document.getElementById('settings-toggle');
+
+    hiddenInput.addEventListener('focus', () => {
+      typingArea.classList.add('is-focused');
+    });
+
+    hiddenInput.addEventListener('blur', () => {
+      typingArea.classList.remove('is-focused');
+    });
+
+    function closeSettings() {
+      settingsMenu.style.display = 'none';
+      settingsOverlay.style.display = 'none';
+    }
+
+    function renderSettings() {
+      settingsOptions.innerHTML = '';
+      WORD_OPTIONS.forEach(num => {
+        const btn = document.createElement('button');
+        btn.className = `word-count-btn ${num === currentWordCount ? 'active' : ''}`;
+        btn.innerText = num;
+        btn.onclick = () => {
+          currentWordCount = num;
+          closeSettings();
+          renderSettings();
+          init(false);
+        };
+        settingsOptions.appendChild(btn);
+      });
+    }
+
+    settingsToggle.addEventListener('click', () => {
+      settingsMenu.style.display = 'flex';
+      settingsOverlay.style.display = 'block';
+    });
+
+    settingsOverlay.addEventListener('click', closeSettings);
+
+    function generateRandomText(count) {
+      let words = [];
+      let capitalizeNext = true;
+      for (let i = 0; i < count; i++) {
+        let word = WORD_LIST[Math.floor(Math.random() * WORD_LIST.length)];
+        if (capitalizeNext) {
+          word = word.charAt(0).toUpperCase() + word.slice(1);
+          capitalizeNext = false;
+        }
+        if (i < count - 1 && Math.random() < 0.15) {
+          word += ",";
+        } else if (i < count - 1 && Math.random() < 0.15) {
+          word += ".";
+          capitalizeNext = true;
+        } else if (!isInfinityMode && i === count - 1) {
+          word += ".";
+        }
+        words.push(word);
+      }
+      return words.join(' ');
+    }
+
+    function appendMoreWords(count) {
+      const newWordsText = generateRandomText(count);
+      const words = newWordsText.split(' ');
+      
+      words.forEach((word) => {
+        const wordEl = document.createElement('div');
+        wordEl.className = 'word';
+        word.split('').forEach(char => {
+          const charEl = document.createElement('span');
+          charEl.className = 'char';
+          charEl.innerText = char;
+          wordEl.appendChild(charEl);
+          charsData.push({ el: charEl, expected: char });
+        });
+        
+        const spaceEl = document.createElement('span');
+        spaceEl.className = 'char';
+        spaceEl.textContent = ' ';
+        wordEl.appendChild(spaceEl);
+        charsData.push({ el: spaceEl, expected: ' ' });
+        
+        textWrapper.appendChild(wordEl);
+      });
+    }
+
+    function updateProgressDisplay(currentWordIdx) {
+      if (isInfinityMode) {
+        let livesDisplay = '● '.repeat(lives) + '○ '.repeat(3 - lives);
+        progressText.innerText = `${currentWordIdx} 🔥 | ${livesDisplay}`;
+      } else {
+        progressText.innerText = `${Math.min(currentWordIdx, totalWordsCount)}/${totalWordsCount}`;
+      }
+    }
+
+    function init(keepText = false) {
+      isInfinityMode = currentWordCount === '∞';
+      lives = 3;
+      previousInputLength = 0;
+
+      if (!keepText || isInfinityMode) {
+        let initialCount = isInfinityMode ? 40 : currentWordCount;
+        sampleText = generateRandomText(initialCount);
+      }
+      
+      textWrapper.innerHTML = '';
+      movingCanvas.style.transform = 'translateY(0px)';
+      hiddenInput.value = '';
+      hiddenInput.disabled = false;
+      charsData = [];
+      startTime = null;
+      
+      const words = sampleText.split(' ');
+      totalWordsCount = words.length;
+      updateProgressDisplay(0);
+      
+      words.forEach((word, wordIndex) => {
+        const wordEl = document.createElement('div');
+        wordEl.className = 'word';
+        word.split('').forEach(char => {
+          const charEl = document.createElement('span');
+          charEl.className = 'char';
+          charEl.innerText = char;
+          wordEl.appendChild(charEl);
+          charsData.push({ el: charEl, expected: char });
+        });
+        
+        if (wordIndex < words.length - 1 || isInfinityMode) {
+          const spaceEl = document.createElement('span');
+          spaceEl.className = 'char';
+          spaceEl.textContent = ' ';
+          wordEl.appendChild(spaceEl);
+          charsData.push({ el: spaceEl, expected: ' ' });
+        }
+        textWrapper.appendChild(wordEl);
+      });
+      
+      document.querySelectorAll('.screen-only').forEach(el => el.style.display = '');
+      document.getElementById('config-area').style.display = 'flex';
+      typingArea.style.display = 'block';
+      resultArea.style.display = 'none';
+      
+      updateCaretAndScroll();
+      hiddenInput.blur(); 
+      typingArea.classList.remove('is-focused');
+    }
+
+    function calculateResult() {
+      hiddenInput.disabled = true;
+      const endTime = new Date().getTime();
+      const timeInMinutes = (endTime - startTime) / 60000;
+      const inputVal = hiddenInput.value;
+      
+      let correctCount = 0;
+      for(let i = 0; i < inputVal.length; i++) {
+        if(inputVal[i] === charsData[i].expected) correctCount++;
+      }
+      
+      const errors = inputVal.length - correctCount;
+      const grossWPM = (inputVal.length / 5) / timeInMinutes;
+      const errorPenalty = errors / timeInMinutes;
+      let netWPM = Math.round(grossWPM - errorPenalty);
+      if (netWPM < 0) netWPM = 0; 
+      
+      let accuracy = 0;
+      if (inputVal.length > 0) {
+         accuracy = Math.round((correctCount / inputVal.length) * 100);
+      }
+      
+      document.getElementById('wpm').innerText = netWPM;
+      document.getElementById('accuracy').innerText = accuracy + '%';
+      
+      document.querySelectorAll('.screen-only').forEach(el => el.style.display = 'none');
+      resultArea.style.display = 'flex';
+    }
+
+    function updateCaretAndScroll() {
+      const val = hiddenInput.value;
+      const index = val.length;
+      
+      let currentWordIdx = 0;
+      if (val.length > 0) {
+        currentWordIdx = val.split(' ').length - 1;
+      }
+      updateProgressDisplay(currentWordIdx);
+      
+      if (!isInfinityMode && index === charsData.length) {
+        updateProgressDisplay(totalWordsCount);
+        calculateResult();
+        return;
+      }
+
+      // Generate teks tambahan jika mendekati akhir di mode Infinity
+      if (isInfinityMode && (charsData.length - index < 100)) {
+        appendMoreWords(20);
+      }
+
+      if (index >= charsData.length) return;
+
+      const activeCharEl = charsData[index].el;
+      const parentRect = movingCanvas.getBoundingClientRect();
+      const charRect = activeCharEl.getBoundingClientRect();
+
+      caret.style.left = (charRect.left - parentRect.left) + 'px';
+      caret.style.top = (charRect.top - parentRect.top) + 'px';
+      
+      const offsetTop = activeCharEl.offsetTop;
+      if (offsetTop >= 55) {
+        movingCanvas.style.transform = `translateY(-${offsetTop - 55}px)`;
+      } else {
+        movingCanvas.style.transform = `translateY(0px)`;
+      }
+    }
+
+    hiddenInput.addEventListener('input', () => {
+      if (!startTime) startTime = new Date().getTime();
+      const val = hiddenInput.value;
+      
+      // Logika pengurangan nyawa untuk mode Infinity
+      if (isInfinityMode && val.length > previousInputLength) {
+        for(let i = previousInputLength; i < val.length; i++) {
+          if (val[i] !== charsData[i].expected) {
+            lives--;
+          }
+        }
+        if (lives <= 0) {
+          // Tandai error terakhir sebelum mati
+          charsData[val.length - 1].el.classList.add('incorrect');
+          updateProgressDisplay(val.split(' ').length - 1);
+          calculateResult();
+          return;
+        }
+      }
+      previousInputLength = val.length;
+
+      caret.classList.remove('blink');
+      caret.classList.add('typing');
+      clearTimeout(caretTimeout);
+      caretTimeout = setTimeout(() => {
+        caret.classList.remove('typing');
+        caret.classList.add('blink');
+      }, 500);
+
+      charsData.forEach((charObj, i) => {
+        charObj.el.classList.remove('correct', 'incorrect');
+        if (i < val.length) {
+          if (val[i] === charObj.expected) charObj.el.classList.add('correct');
+          else charObj.el.classList.add('incorrect');
+        }
+      });
+      updateCaretAndScroll();
+    });
+
+    document.addEventListener('click', (e) => {
+      if (e.target.closest('button') || e.target.closest('#settings-menu') || e.target.closest('#settings-toggle') || e.target.closest('svg')) {
+        return;
+      }
+      if (!hiddenInput.disabled && settingsMenu.style.display !== 'flex') {
+        hiddenInput.focus();
+      }
+    });
+
+    document.addEventListener('keydown', () => {
+      if (!hiddenInput.disabled && settingsMenu.style.display !== 'flex' && document.activeElement !== hiddenInput) {
+        hiddenInput.focus();
+      }
+    });
+
+    document.getElementById('next-hint').addEventListener('click', () => init(false));
+    document.getElementById('restart-hint').addEventListener('click', () => init(true));
+    document.getElementById('next-btn-result').addEventListener('click', () => init(false));
+    document.getElementById('restart-btn-result').addEventListener('click', () => init(true));
+
+    renderSettings();
+    init(false);
+  </script>
+</body>
+</html>
