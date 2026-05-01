@@ -3,26 +3,50 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Typing Test - Infinity Mode</title>
+  <title>Typing Test - M3 Dark</title>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;500;700&display=swap');
+
+    :root {
+      --primary: #D0BCFF;
+      --on-primary: #381E72;
+      --surface: #141218;
+      --surface-2: #1D1B20;
+      --surface-3: #2B2930;
+      --on-surface: #E6E0E9;
+      --on-surface-variant: #CAC4D0;
+      --outline: #938F99;
+      --error: #F2B8B5;
+      --untyped: #49454F;
+    }
 
     * { 
       box-sizing: border-box; 
       -webkit-tap-highlight-color: transparent; 
     }
 
-    button {
-      outline: none; 
+    ::selection {
+      background-color: rgba(208, 188, 255, 0.2);
+      color: inherit;
     }
 
     body {
-      background-color: #323437;
-      color: #646669;
-      font-family: 'Roboto Mono', monospace;
+      background-color: var(--surface);
+      color: var(--on-surface);
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
       margin: 0;
       overflow: hidden;
-      selection-color: transparent;
+    }
+
+    button {
+      outline: none;
+      font-family: inherit;
+    }
+
+    button:focus-visible, .word-count-btn:focus-visible {
+      outline: 2px solid var(--primary);
+      outline-offset: 2px;
+      border-radius: inherit;
     }
 
     #app {
@@ -31,43 +55,61 @@
       margin: 0 auto;
       height: 100vh;
       padding: 20px;
-      padding-bottom: 40vh; 
+      padding-bottom: 30vh; 
       display: flex;
       flex-direction: column;
       justify-content: center;
       position: relative;
     }
 
-    #config-area {
+    #header-area {
       display: flex;
-      flex-direction: column;
+      justify-content: space-between;
       align-items: center;
-      gap: 15px;
-      margin-bottom: 20px;
       width: 100%;
+      margin-bottom: 24px;
     }
 
     .settings-badge {
-      background-color: #2c2e31;
-      color: #646669;
-      padding: 10px 20px;
-      border-radius: 8px;
-      font-size: 1rem;
+      background-color: var(--surface-2);
+      color: var(--on-surface-variant);
+      padding: 8px 16px;
+      border-radius: 100px;
+      font-size: 0.9rem;
+      font-weight: 500;
+      border: 1px solid var(--outline);
       cursor: pointer;
-      transition: color 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: background-color 0.2s, color 0.2s;
     }
     
-    .settings-badge:hover { color: #d1d0c5; }
+    .settings-badge:hover { 
+      background-color: var(--surface-3);
+      color: var(--on-surface); 
+    }
+
+    #live-stats-container {
+      display: flex;
+      gap: 16px;
+      font-size: 1rem;
+      font-weight: 500;
+      color: var(--primary);
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+
+    #live-stats-container.visible {
+      opacity: 1;
+    }
 
     #settings-overlay {
       display: none;
       position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
-      background-color: rgba(0, 0, 0, 0.4);
-      backdrop-filter: blur(2px);
+      inset: 0;
+      background-color: rgba(20, 18, 24, 0.6);
+      backdrop-filter: blur(4px);
       z-index: 90;
     }
 
@@ -79,57 +121,59 @@
       transform: translate(-50%, -50%);
       flex-direction: column;
       align-items: center;
-      gap: 20px;
-      background-color: #2c2e31;
-      padding: 25px 35px;
-      border-radius: 15px;
-      box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+      gap: 24px;
+      background-color: var(--surface-2);
+      padding: 32px;
+      border-radius: 28px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2), 0 24px 38px rgba(0,0,0,0.14);
       z-index: 100;
       width: 90%;
-      max-width: 450px;
+      max-width: 400px;
     }
 
     .settings-title {
-      color: #d1d0c5;
-      font-size: 1.2rem;
-      font-weight: bold;
+      color: var(--on-surface);
+      font-size: 1.5rem;
+      font-weight: 400;
     }
 
     #settings-options {
       display: flex;
-      gap: 12px;
-      flex-wrap: wrap;
-      justify-content: center;
+      border: 1px solid var(--outline);
+      border-radius: 100px;
+      overflow: hidden;
     }
 
     .word-count-btn {
-      background: #323437;
-      border: 2px solid transparent;
-      color: #646669;
-      font-family: inherit;
-      font-size: 1.1rem;
+      background: transparent;
+      border: none;
+      border-right: 1px solid var(--outline);
+      color: var(--on-surface-variant);
+      font-size: 1rem;
       font-weight: 500;
       cursor: pointer;
-      transition: all 0.2s;
-      padding: 8px 16px;
-      border-radius: 8px;
+      transition: background-color 0.2s, color 0.2s;
+      padding: 10px 20px;
+    }
+
+    .word-count-btn:last-child {
+      border-right: none;
     }
 
     .word-count-btn:hover {
-      color: #d1d0c5;
-      background: #3a3d40;
+      background-color: rgba(208, 188, 255, 0.08);
+      color: var(--on-surface);
     }
 
     .word-count-btn.active {
-      color: #323437;
-      background: #e2b714;
-      font-weight: bold;
+      background-color: var(--primary);
+      color: var(--on-primary);
     }
 
     #progress {
-      font-size: 2.5rem;
-      color: #e2b714;
-      margin-bottom: 10px;
+      font-size: 1.25rem;
+      color: var(--primary);
+      margin-bottom: 12px;
       font-weight: 500;
       width: 100%;
       text-align: left;
@@ -141,6 +185,7 @@
       height: 160px;
       line-height: 55px;
       font-size: 36px;
+      font-family: 'Roboto Mono', monospace;
       overflow: hidden;
       width: 100%;
       text-align: left;
@@ -154,15 +199,15 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      color: #d1d0c5;
-      font-size: 1.2rem;
+      color: var(--on-surface);
+      font-size: 1.1rem;
+      font-family: system-ui, sans-serif;
       text-align: center;
-      line-height: 1.6;
       z-index: 20;
       transition: opacity 0.2s;
       cursor: pointer;
-      background: transparent;
-      padding: 0 20px;
+      background: rgba(20, 18, 24, 0.8);
+      border-radius: 12px;
     }
 
     #typing-area.is-focused #focus-overlay {
@@ -171,7 +216,7 @@
     }
 
     #typing-area:not(.is-focused) #moving-canvas {
-      filter: blur(5px);
+      filter: blur(4px);
     }
 
     #moving-canvas {
@@ -187,12 +232,13 @@
     .char {
       transition: color 0.1s;
       position: relative;
+      color: var(--untyped);
     }
 
-    .correct { color: #d1d0c5; }
+    .correct { color: var(--on-surface); }
     .incorrect { 
-      color: #ca4754; 
-      background-color: rgba(202, 71, 84, 0.15); 
+      color: var(--error); 
+      background-color: rgba(242, 184, 181, 0.15); 
       border-radius: 2px;
     }
 
@@ -200,7 +246,7 @@
       position: absolute;
       width: 3px;
       height: 40px;
-      background-color: #e2b714;
+      background-color: var(--primary);
       transition: left 0.1s ease, top 0.1s ease;
       margin-top: 8px;
       border-radius: 2px;
@@ -220,25 +266,27 @@
     .action-container {
       display: flex;
       justify-content: center;
-      gap: 40px;
-      margin-top: 30px;
+      gap: 24px;
+      margin-top: 32px;
     }
 
     .action-btn {
-      color: #646669;
+      color: var(--on-surface-variant);
       background: transparent;
       border: none;
-      padding: 10px;
+      padding: 12px;
+      border-radius: 50%;
       cursor: pointer;
       display: flex;
       justify-content: center;
       align-items: center;
-      transition: color 0.2s, transform 0.2s;
+      transition: background-color 0.2s, color 0.2s;
     }
 
-    .action-btn:hover { color: #d1d0c5; }
-    .action-btn.reset:hover { transform: rotate(-30deg); }
-    .action-btn.next:hover { transform: translateX(5px); }
+    .action-btn:hover { 
+      background-color: var(--surface-3);
+      color: var(--on-surface); 
+    }
 
     #result {
       display: none;
@@ -246,23 +294,86 @@
       align-items: center;
       justify-content: center;
       text-align: center;
+      background-color: var(--surface-2);
+      padding: 40px;
+      border-radius: 28px;
     }
 
-    .score-title { font-size: 1.5rem; color: #646669; margin-top: 20px; }
-    .score-value { font-size: 6rem; color: #e2b714; line-height: 1; font-weight: 500; }
+    .score-group {
+      display: flex;
+      gap: 48px;
+      margin-bottom: 24px;
+    }
+
+    .score-item {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .score-title { font-size: 1rem; color: var(--on-surface-variant); margin-bottom: 8px; }
+    .score-value { font-size: 4.5rem; color: var(--primary); line-height: 1; font-weight: 500; font-family: 'Roboto Mono', monospace; }
+
+    #history-panel {
+      position: absolute;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: calc(100% - 40px);
+      max-width: 600px;
+      background-color: var(--surface-2);
+      border-radius: 16px;
+      padding: 16px 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .history-header {
+      display: flex;
+      justify-content: space-between;
+      color: var(--on-surface-variant);
+      font-size: 0.9rem;
+      border-bottom: 1px solid var(--surface-3);
+      padding-bottom: 8px;
+    }
+
+    .history-best {
+      color: var(--primary);
+      font-weight: 500;
+    }
+
+    .history-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      font-size: 0.85rem;
+      color: var(--on-surface);
+    }
+
+    .history-row {
+      display: flex;
+      justify-content: space-between;
+    }
   </style>
 </head>
 <body>
 
   <div id="settings-overlay"></div>
-  <div id="settings-menu">
-    <div class="settings-title">Pilih Jumlah Kata (Words)</div>
+  <div id="settings-menu" role="dialog" aria-modal="true" aria-labelledby="settings-title">
+    <div id="settings-title" class="settings-title">Kata (Words)</div>
     <div id="settings-options"></div>
   </div>
 
   <div id="app">
-    <div id="config-area" class="screen-only">
-      <div class="settings-badge" id="settings-toggle">⚙ settings</div>
+    <div id="header-area" class="screen-only">
+      <button class="settings-badge" id="settings-toggle" aria-label="Pengaturan">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+        Pengaturan
+      </button>
+      <div id="live-stats-container">
+        <div>WPM: <span id="live-wpm">0</span></div>
+        <div>ACC: <span id="live-acc">100</span>%</div>
+      </div>
     </div>
 
     <div id="progress" class="screen-only">0/0</div>
@@ -270,9 +381,7 @@
     <input type="text" id="hidden-input" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
     
     <div id="typing-area" class="screen-only">
-      <div id="focus-overlay">
-        <span>Klik di sini atau tekan tombol<br>apa saja untuk fokus</span>
-      </div>
+      <div id="focus-overlay">Sentuh layar atau ketik untuk mulai</div>
       <div id="moving-canvas">
         <div id="text-wrapper"></div>
         <div id="caret" class="blink"></div>
@@ -280,36 +389,42 @@
     </div>
     
     <div class="action-container screen-only">
-      <button id="restart-hint" class="action-btn reset" title="Ulangi Teks Ini">
-        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/>
-        </svg>
+      <button id="restart-hint" class="action-btn" aria-label="Ulangi Teks Ini" title="Ulangi">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
       </button>
-      <button id="next-hint" class="action-btn next" title="Teks Baru">
-        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M5 12h14M12 5l7 7-7 7"/>
-        </svg>
+      <button id="next-hint" class="action-btn" aria-label="Teks Baru" title="Teks Baru">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
       </button>
     </div>
 
     <div id="result">
-      <div class="score-title">wpm</div>
-      <div class="score-value" id="wpm">0</div>
-      <div class="score-title">acc</div>
-      <div class="score-value" style="font-size: 4rem;" id="accuracy">0%</div>
+      <div class="score-group">
+        <div class="score-item">
+          <div class="score-title">wpm</div>
+          <div class="score-value" id="wpm">0</div>
+        </div>
+        <div class="score-item">
+          <div class="score-title">acc</div>
+          <div class="score-value" id="accuracy">0%</div>
+        </div>
+      </div>
       
-      <div class="action-container" style="margin-top: 40px;">
-        <button id="restart-btn-result" class="action-btn reset" title="Ulangi Teks Ini">
-          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/>
-          </svg>
+      <div class="action-container">
+        <button id="restart-btn-result" class="action-btn" aria-label="Ulangi Teks Ini" title="Ulangi">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
         </button>
-        <button id="next-btn-result" class="action-btn next" title="Teks Baru">
-          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M5 12h14M12 5l7 7-7 7"/>
-          </svg>
+        <button id="next-btn-result" class="action-btn" aria-label="Teks Baru" title="Teks Baru">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
         </button>
       </div>
+    </div>
+    
+    <div id="history-panel">
+      <div class="history-header">
+        <span>Riwayat</span>
+        <span class="history-best" id="best-score-display">Best: -</span>
+      </div>
+      <div class="history-list" id="history-list"></div>
     </div>
   </div>
 
@@ -321,12 +436,12 @@
     let isInfinityMode = false;
     let lives = 3;
     let previousInputLength = 0;
-
     let sampleText = "";
     let charsData = [];
     let startTime = null;
     let caretTimeout;
     let totalWordsCount = 0;
+    let liveStatsTimer = null;
 
     const textWrapper = document.getElementById('text-wrapper');
     const hiddenInput = document.getElementById('hidden-input');
@@ -339,6 +454,11 @@
     const settingsOptions = document.getElementById('settings-options');
     const settingsOverlay = document.getElementById('settings-overlay');
     const settingsToggle = document.getElementById('settings-toggle');
+    const liveStatsContainer = document.getElementById('live-stats-container');
+    const liveWpmEl = document.getElementById('live-wpm');
+    const liveAccEl = document.getElementById('live-acc');
+    const bestScoreDisplay = document.getElementById('best-score-display');
+    const historyList = document.getElementById('history-list');
 
     hiddenInput.addEventListener('focus', () => {
       typingArea.classList.add('is-focused');
@@ -351,6 +471,7 @@
     function closeSettings() {
       settingsMenu.style.display = 'none';
       settingsOverlay.style.display = 'none';
+      hiddenInput.focus();
     }
 
     function renderSettings() {
@@ -372,9 +493,55 @@
     settingsToggle.addEventListener('click', () => {
       settingsMenu.style.display = 'flex';
       settingsOverlay.style.display = 'block';
+      settingsOptions.querySelector('.word-count-btn').focus();
     });
 
     settingsOverlay.addEventListener('click', closeSettings);
+    
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && settingsMenu.style.display === 'flex') {
+        closeSettings();
+      }
+    });
+
+    function loadHistory() {
+      const data = JSON.parse(localStorage.getItem('typingHistory')) || { runs: [], best: {} };
+      const modeKey = currentWordCount.toString();
+      const bestForMode = data.best[modeKey];
+      
+      bestScoreDisplay.textContent = bestForMode ? `Best (${modeKey}): ${bestForMode.wpm} wpm • ${bestForMode.acc}%` : `Best (${modeKey}): -`;
+      
+      historyList.innerHTML = '';
+      const recentRuns = data.runs.slice(0, 5);
+      if(recentRuns.length === 0) {
+        historyList.innerHTML = '<div class="history-row">Belum ada data</div>';
+      } else {
+        recentRuns.forEach(run => {
+          const row = document.createElement('div');
+          row.className = 'history-row';
+          const d = new Date(run.date);
+          const timeStr = `${d.getHours().toString().padStart(2, '0')}:${d.getMinutes().toString().padStart(2, '0')}`;
+          row.innerHTML = `<span>Mode: ${run.mode} | ${timeStr}</span> <span>${run.wpm} wpm • ${run.acc}%</span>`;
+          historyList.appendChild(row);
+        });
+      }
+    }
+
+    function saveScore(wpm, acc) {
+      let data = JSON.parse(localStorage.getItem('typingHistory')) || { runs: [], best: {} };
+      const modeKey = currentWordCount.toString();
+      
+      data.runs.unshift({ mode: modeKey, wpm, acc, date: Date.now() });
+      if (data.runs.length > 20) data.runs.pop();
+      
+      if (!data.best[modeKey]) data.best[modeKey] = { wpm: 0, acc: 0 };
+      if (wpm > data.best[modeKey].wpm || (wpm === data.best[modeKey].wpm && acc > data.best[modeKey].acc)) {
+        data.best[modeKey] = { wpm, acc };
+      }
+      
+      localStorage.setItem('typingHistory', JSON.stringify(data));
+      loadHistory();
+    }
 
     function generateRandomText(count) {
       let words = [];
@@ -432,10 +599,33 @@
       }
     }
 
+    function loopLiveStats() {
+      if (!startTime) return;
+      const now = Date.now();
+      const mins = (now - startTime) / 60000;
+      const typedLen = hiddenInput.value.length;
+      
+      if (mins > 0 && typedLen > 0) {
+        let correctCount = 0;
+        for(let i = 0; i < typedLen; i++) {
+          if(hiddenInput.value[i] === charsData[i].expected) correctCount++;
+        }
+        const grossWpm = Math.round((typedLen / 5) / mins);
+        const acc = Math.round((correctCount / typedLen) * 100);
+        
+        liveWpmEl.textContent = grossWpm;
+        liveAccEl.textContent = acc;
+      }
+    }
+
     function init(keepText = false) {
       isInfinityMode = currentWordCount === '∞';
       lives = 3;
       previousInputLength = 0;
+      clearInterval(liveStatsTimer);
+      liveStatsContainer.classList.remove('visible');
+      liveWpmEl.textContent = '0';
+      liveAccEl.textContent = '100';
 
       if (!keepText || isInfinityMode) {
         let initialCount = isInfinityMode ? 40 : currentWordCount;
@@ -475,10 +665,11 @@
       });
       
       document.querySelectorAll('.screen-only').forEach(el => el.style.display = '');
-      document.getElementById('config-area').style.display = 'flex';
+      document.getElementById('header-area').style.display = 'flex';
       typingArea.style.display = 'block';
       resultArea.style.display = 'none';
       
+      loadHistory();
       updateCaretAndScroll();
       hiddenInput.blur(); 
       typingArea.classList.remove('is-focused');
@@ -486,7 +677,10 @@
 
     function calculateResult() {
       hiddenInput.disabled = true;
-      const endTime = new Date().getTime();
+      clearInterval(liveStatsTimer);
+      liveStatsContainer.classList.remove('visible');
+      
+      const endTime = Date.now();
       const timeInMinutes = (endTime - startTime) / 60000;
       const inputVal = hiddenInput.value;
       
@@ -511,6 +705,8 @@
       
       document.querySelectorAll('.screen-only').forEach(el => el.style.display = 'none');
       resultArea.style.display = 'flex';
+      
+      saveScore(netWPM, accuracy);
     }
 
     function updateCaretAndScroll() {
@@ -529,7 +725,6 @@
         return;
       }
 
-      // Generate teks tambahan jika mendekati akhir di mode Infinity
       if (isInfinityMode && (charsData.length - index < 100)) {
         appendMoreWords(20);
       }
@@ -552,10 +747,14 @@
     }
 
     hiddenInput.addEventListener('input', () => {
-      if (!startTime) startTime = new Date().getTime();
+      if (!startTime) {
+        startTime = Date.now();
+        liveStatsContainer.classList.add('visible');
+        liveStatsTimer = setInterval(loopLiveStats, 500);
+      }
+      
       const val = hiddenInput.value;
       
-      // Logika pengurangan nyawa untuk mode Infinity
       if (isInfinityMode && val.length > previousInputLength) {
         for(let i = previousInputLength; i < val.length; i++) {
           if (val[i] !== charsData[i].expected) {
@@ -563,7 +762,6 @@
           }
         }
         if (lives <= 0) {
-          // Tandai error terakhir sebelum mati
           charsData[val.length - 1].el.classList.add('incorrect');
           updateProgressDisplay(val.split(' ').length - 1);
           calculateResult();
@@ -599,7 +797,8 @@
       }
     });
 
-    document.addEventListener('keydown', () => {
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') return;
       if (!hiddenInput.disabled && settingsMenu.style.display !== 'flex' && document.activeElement !== hiddenInput) {
         hiddenInput.focus();
       }
