@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lumina SaaS Platform — Aether Portfolio</title>
+    <meta name="description" content="Case study for Lumina SaaS Platform by Aether.">
+    <link rel="stylesheet" href="css/style.css">
+    <script src="https://unpkg.com/@studio-freight/lenis@1.0.34/dist/lenis.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+</head>
+<body>
+
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="nav-logo">Aether.</a>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="project.html">Projects</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="contact.html">Contact</a></li>
+            </ul>
+            <a href="contact.html" class="btn btn-primary nav-cta">Let's Talk</a>
+            <div class="menu-toggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+    <main>
+        <article>
+            <!-- Project Hero -->
+            <section class="project-hero">
+                <div class="container">
+                    <div class="project-title">
+                        <h1>Lumina SaaS Platform</h1>
+                    </div>
+
+                    <div class="project-details-bar">
+                        <div class="detail-col">
+                            <h5>Client</h5>
+                            <p>Lumina FinTech</p>
+                        </div>
+                        <div class="detail-col">
+                            <h5>Role</h5>
+                            <p>Lead Frontend Developer</p>
+                        </div>
+                        <div class="detail-col">
+                            <h5>Timeline</h5>
+                            <p>12 Weeks</p>
+                        </div>
+                        <div class="detail-col">
+                            <h5>Services</h5>
+                            <p>UI Engineering, Motion Design</p>
+                        </div>
+                    </div>
+
+                    <div class="project-main-image">
+                        <img src="https://images.unsplash.com/photo-1600132806370-bf17e65e942f?q=80&w=2794&auto=format&fit=crop" alt="Lumina Dashboard">
+                    </div>
+
+                    <!-- Project Content -->
+                    <div class="project-content-grid">
+                        <div class="project-content-sidebar">
+                            <h3>The Challenge</h3>
+                        </div>
+                        <div class="project-content-body">
+                            <p>Lumina approached me with a complex problem: their financial dashboard was incredibly powerful, but overwhelming for new users. The goal was to redesign the frontend architecture and UI to feel less like a spreadsheet and more like a premium luxury consumer app.</p>
+                            <p>I had to balance high-density data visualization with large amounts of whitespace, utilizing micro-interactions to reveal secondary information only when needed.</p>
+                        </div>
+                    </div>
+
+                    <div class="project-content-grid">
+                        <div class="project-content-sidebar">
+                            <h3>The Approach</h3>
+                        </div>
+                        <div class="project-content-body">
+                            <p>We started by rebuilding the component library from the ground up using React and Tailwind CSS. To achieve the "premium" feel, we implemented custom GSAP animations for all data state changes.</p>
+                            <p>Instead of harsh grid lines, we used subtle shadows, floating cards, and glassmorphism effects to create a sense of depth and hierarchy.</p>
+                        </div>
+                    </div>
+
+                    <!-- Gallery -->
+                    <div class="project-gallery">
+                        <div class="gallery-item full">
+                            <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=2940&auto=format&fit=crop" alt="Data Visualization">
+                        </div>
+                        <div class="gallery-item">
+                            <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=80&w=2426&auto=format&fit=crop" alt="UI Details">
+                        </div>
+                        <div class="gallery-item">
+                            <img src="https://images.unsplash.com/photo-1504868584819-f8e8b4b6d7e3?q=80&w=2953&auto=format&fit=crop" alt="Dashboard Analytics">
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Next Project -->
+            <a href="#" style="display: block; text-decoration: none;">
+                <div class="next-project">
+                    <h4>Next Project</h4>
+                    <h2>Aura Creative Agency</h2>
+                </div>
+            </a>
+        </article>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-top">
+                <div class="footer-brand">
+                    <h2>Aether.</h2>
+                    <p>Designing digital experiences that feel alive. A creative studio approach to personal branding.</p>
+                </div>
+                <div class="footer-links-wrapper">
+                    <div class="footer-col">
+                        <h4>Navigation</h4>
+                        <ul>
+                            <li><a href="index.html">Home</a></li>
+                            <li><a href="project.html">Projects</a></li>
+                            <li><a href="about.html">About</a></li>
+                            <li><a href="contact.html">Contact</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-col">
+                        <h4>Socials</h4>
+                        <ul>
+                            <li><a href="#" target="_blank">Twitter / X</a></li>
+                            <li><a href="#" target="_blank">LinkedIn</a></li>
+                            <li><a href="#" target="_blank">GitHub</a></li>
+                            <li><a href="#" target="_blank">Dribbble</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 Aether Portfolio. All rights reserved.</p>
+                <p>Designed with intentionality.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/main.js"></script>
+</body>
+</html>

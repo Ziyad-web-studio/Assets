@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aether Portfolio — Creative Developer</title>
+    <meta name="description" content="Aether Portfolio - Frontend developer focused on premium UI, motion, and modern web experiences.">
+    <link rel="stylesheet" href="css/style.css">
+    <script src="https://unpkg.com/@studio-freight/lenis@1.0.34/dist/lenis.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+</head>
+<body>
+
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="nav-logo">Aether.</a>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="project.html">Projects</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="contact.html">Contact</a></li>
+            </ul>
+            <a href="contact.html" class="btn btn-primary nav-cta">Let's Talk</a>
+            <div class="menu-toggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+    <main>
+        <!-- Section 2: Hero -->
+        <section class="hero">
+            <div class="hero-bg"></div>
+            <div class="container hero-grid">
+                <div class="hero-content">
+                    <h1>Designing Digital Experiences That Feel Alive.</h1>
+                    <p>Frontend developer focused on premium UI, motion, and modern web experiences.</p>
+                    <div class="hero-cta">
+                        <a href="#projects" class="btn btn-primary">View Projects</a>
+                        <a href="contact.html" class="btn btn-outline">Book a Call</a>
+                    </div>
+                </div>
+                <div class="hero-visual">
+                    <div class="hero-image-wrapper">
+                        <img src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=2564&auto=format&fit=crop" alt="Abstract 3D Shape">
+                    </div>
+                    <div class="hero-stat-card">
+                        <div class="stat-number">5+</div>
+                        <div class="stat-text">Years of<br>Experience</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 3: Trusted By -->
+        <section class="brands">
+            <div class="marquee-container">
+                <div class="marquee-content">
+                    <span class="brand-logo">Vercel</span>
+                    <span class="brand-logo">Figma</span>
+                    <span class="brand-logo">Stripe</span>
+                    <span class="brand-logo">Linear</span>
+                    <span class="brand-logo">Raycast</span>
+                </div>
+                <div class="marquee-content">
+                    <span class="brand-logo">Vercel</span>
+                    <span class="brand-logo">Figma</span>
+                    <span class="brand-logo">Stripe</span>
+                    <span class="brand-logo">Linear</span>
+                    <span class="brand-logo">Raycast</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 4: About -->
+        <section class="about" id="about">
+            <div class="container about-grid">
+                <div class="about-image">
+                    <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=1287&auto=format&fit=crop" alt="Aether Portrait">
+                </div>
+                <div class="about-content">
+                    <h2>Crafting the invisible into the unforgettable.</h2>
+                    <p>I blend minimal editorial design with modern frontend technologies to create websites that don't just look good, but feel incredibly smooth to interact with.</p>
+                    <p>My approach is rooted in the belief that every pixel should serve a purpose, and every animation should feel like a natural extension of the user's intent.</p>
+                    <a href="about.html" class="btn btn-outline" style="margin-top: 24px;">Read Full Story</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 5: Featured Projects -->
+        <section class="projects" id="projects">
+            <div class="container">
+                <div class="projects-header">
+                    <h2>Selected Works</h2>
+                </div>
+                <div class="projects-grid">
+                    <!-- Project 1 -->
+                    <div class="project-item">
+                        <div class="project-image-wrapper">
+                            <img src="https://images.unsplash.com/photo-1600132806370-bf17e65e942f?q=80&w=2794&auto=format&fit=crop" alt="Project 1 Thumbnail">
+                        </div>
+                        <div class="project-info">
+                            <div class="project-meta"><span>Frontend</span> • <span>2023</span></div>
+                            <h3>Lumina SaaS Platform</h3>
+                            <p>A premium dashboard interface designed for a luxury fintech startup. Focused on data visualization and subtle micro-interactions.</p>
+                            <a href="project.html" class="btn btn-outline">View Case Study</a>
+                        </div>
+                    </div>
+                    <!-- Project 2 -->
+                    <div class="project-item">
+                        <div class="project-image-wrapper">
+                            <img src="https://images.unsplash.com/photo-1618761714954-0b8cd0026356?q=80&w=2670&auto=format&fit=crop" alt="Project 2 Thumbnail">
+                        </div>
+                        <div class="project-info">
+                            <div class="project-meta"><span>Web Design & Dev</span> • <span>2024</span></div>
+                            <h3>Aura Creative Agency</h3>
+                            <p>An immersive portfolio website utilizing WebGL and advanced GSAP animations to showcase high-end fashion photography.</p>
+                            <a href="project.html" class="btn btn-outline">View Case Study</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 6: Process -->
+        <section class="process">
+            <div class="container">
+                <h2>The Process</h2>
+                <div class="process-grid">
+                    <div class="process-line"></div>
+                    <div class="process-card">
+                        <div class="process-number">01</div>
+                        <h4>Discovery</h4>
+                        <p>Understanding the brand, goals, and technical requirements to lay a solid foundation.</p>
+                    </div>
+                    <div class="process-card">
+                        <div class="process-number">02</div>
+                        <h4>Design</h4>
+                        <p>Crafting wireframes and high-fidelity mockups with an editorial and premium aesthetic.</p>
+                    </div>
+                    <div class="process-card">
+                        <div class="process-number">03</div>
+                        <h4>Development</h4>
+                        <p>Translating design into clean, performant code with smooth animations and interactions.</p>
+                    </div>
+                    <div class="process-card">
+                        <div class="process-number">04</div>
+                        <h4>Launch</h4>
+                        <p>Testing, optimizing, and deploying the final product for a flawless user experience.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 7: Expertise -->
+        <section class="expertise bg-dark">
+            <div class="container">
+                <h2>Areas of Expertise</h2>
+                <div class="expertise-grid">
+                    <div class="skill-card">
+                        <h4>Frontend Development</h4>
+                        <p>HTML5, CSS3, Vanilla JavaScript, React, Next.js, building scalable and performant architectures.</p>
+                    </div>
+                    <div class="skill-card">
+                        <h4>UI/UX Design</h4>
+                        <p>Creating intuitive, user-centric interfaces with a focus on editorial and luxury aesthetics.</p>
+                    </div>
+                    <div class="skill-card">
+                        <h4>Motion Design</h4>
+                        <p>Implementing subtle, natural-feeling animations using GSAP and Framer Motion.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 8: Testimonials -->
+        <section class="testimonials">
+            <div class="container">
+                <div class="testimonials-grid">
+                    <div class="testimonial-card">
+                        <div class="quote-mark">"</div>
+                        <p class="testimonial-text">Working with Aether was a game-changer. The level of polish and attention to detail in the final product exceeded our highest expectations.</p>
+                        <div class="testimonial-author">
+                            <div class="author-image">
+                                <img src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?q=80&w=1287&auto=format&fit=crop" alt="Client 1">
+                            </div>
+                            <div class="author-info">
+                                <h5>Sarah Jenkins</h5>
+                                <p>Founder, Lumina</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="testimonial-card">
+                        <div class="quote-mark">"</div>
+                        <p class="testimonial-text">A rare combination of design taste and technical execution. The website feels less like a page and more like an experience.</p>
+                        <div class="testimonial-author">
+                            <div class="author-image">
+                                <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=1364&auto=format&fit=crop" alt="Client 2">
+                            </div>
+                            <div class="author-info">
+                                <h5>Marcus Cole</h5>
+                                <p>Creative Director, Aura</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 9: CTA Banner -->
+        <div class="container" style="margin-bottom: 140px;">
+            <section class="cta-banner">
+                <div class="cta-content">
+                    <h2>Let's Build Something Exceptional.</h2>
+                    <div class="cta-buttons">
+                        <a href="contact.html" class="btn btn-white">Schedule a Call</a>
+                        <a href="mailto:hello@aether.com" class="btn btn-outline-white">Send an Email</a>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-top">
+                <div class="footer-brand">
+                    <h2>Aether.</h2>
+                    <p>Designing digital experiences that feel alive. A creative studio approach to personal branding.</p>
+                </div>
+                <div class="footer-links-wrapper">
+                    <div class="footer-col">
+                        <h4>Navigation</h4>
+                        <ul>
+                            <li><a href="index.html">Home</a></li>
+                            <li><a href="project.html">Projects</a></li>
+                            <li><a href="about.html">About</a></li>
+                            <li><a href="contact.html">Contact</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-col">
+                        <h4>Socials</h4>
+                        <ul>
+                            <li><a href="#" target="_blank">Twitter / X</a></li>
+                            <li><a href="#" target="_blank">LinkedIn</a></li>
+                            <li><a href="#" target="_blank">GitHub</a></li>
+                            <li><a href="#" target="_blank">Dribbble</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 Aether Portfolio. All rights reserved.</p>
+                <p>Designed with intentionality.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/main.js"></script>
+</body>
+</html>
