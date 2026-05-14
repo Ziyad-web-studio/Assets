@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact — Aether Portfolio</title>
+    <meta name="description" content="Get in touch with Aether.">
+    <link rel="stylesheet" href="css/style.css">
+    <script src="https://unpkg.com/@studio-freight/lenis@1.0.34/dist/lenis.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+</head>
+<body>
+
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="nav-logo">Aether.</a>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="project.html">Projects</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="contact.html">Contact</a></li>
+            </ul>
+            <a href="contact.html" class="btn btn-primary nav-cta">Let's Talk</a>
+            <div class="menu-toggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+    <main>
+        <section class="contact-hero">
+            <div class="container">
+                <div class="contact-grid">
+
+                    <div class="contact-info">
+                        <h1>Let's start a project.</h1>
+                        <p>I'm currently available for freelance work and open to new full-time opportunities.</p>
+
+                        <div class="contact-details">
+                            <div class="contact-detail-item">
+                                <h5>Email</h5>
+                                <a href="mailto:hello@aether.com">hello@aether.com</a>
+                            </div>
+                            <div class="contact-detail-item">
+                                <h5>Location</h5>
+                                <p>Jakarta, Indonesia (GMT+7)</p>
+                            </div>
+                            <div class="contact-detail-item">
+                                <h5>Socials</h5>
+                                <div style="display: flex; gap: 16px; margin-top: 8px;">
+                                    <a href="#">Twitter</a>
+                                    <a href="#">LinkedIn</a>
+                                    <a href="#">GitHub</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="contact-form-container">
+                        <form action="#" method="POST" id="contactForm">
+                            <div class="form-group">
+                                <label for="name">What's your name?</label>
+                                <input type="text" id="name" name="name" placeholder="John Doe" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="email">What's your email address?</label>
+                                <input type="email" id="email" name="email" placeholder="john@company.com" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="service">What are you looking for?</label>
+                                <input type="text" id="service" name="service" placeholder="Web Design, Frontend Development..." required>
+                            </div>
+                            <div class="form-group">
+                                <label for="message">Tell me about your project</label>
+                                <textarea id="message" name="message" placeholder="Hi Aether, I'd like to talk about..." required></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-primary submit-btn">Send Message</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-top">
+                <div class="footer-brand">
+                    <h2>Aether.</h2>
+                    <p>Designing digital experiences that feel alive. A creative studio approach to personal branding.</p>
+                </div>
+                <div class="footer-links-wrapper">
+                    <div class="footer-col">
+                        <h4>Navigation</h4>
+                        <ul>
+                            <li><a href="index.html">Home</a></li>
+                            <li><a href="project.html">Projects</a></li>
+                            <li><a href="about.html">About</a></li>
+                            <li><a href="contact.html">Contact</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-col">
+                        <h4>Socials</h4>
+                        <ul>
+                            <li><a href="#" target="_blank">Twitter / X</a></li>
+                            <li><a href="#" target="_blank">LinkedIn</a></li>
+                            <li><a href="#" target="_blank">GitHub</a></li>
+                            <li><a href="#" target="_blank">Dribbble</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 Aether Portfolio. All rights reserved.</p>
+                <p>Designed with intentionality.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/main.js"></script>
+    <script>
+        // Form Submission Prevention (for demo purposes)
+        document.getElementById('contactForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const btn = this.querySelector('button');
+            const originalText = btn.innerText;
+            btn.innerText = 'Sending...';
+            setTimeout(() => {
+                btn.innerText = 'Message Sent!';
+                btn.style.backgroundColor = '#10B981'; // Success green
+                this.reset();
+                setTimeout(() => {
+                    btn.innerText = originalText;
+                    btn.style.backgroundColor = '';
+                }, 3000);
+            }, 1500);
+        });
+    </script>
+</body>
+</html>
